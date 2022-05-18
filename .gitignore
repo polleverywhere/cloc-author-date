@@ -1,0 +1,5 @@
+repos.txt
+reports/*.txt
+.cloc-tmp/*
+
+.DS_Store
