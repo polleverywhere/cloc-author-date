@@ -1,15 +1,15 @@
  #!/bin/bash
  
 git_author_stats() {
-  git -C $1 log --author="$2" --since=$3 --numstat --pretty="%ae %H" \
+  git -C $1 log --author="$2" --since=$3  --until=$4 --numstat --pretty="%ae %H" \
     | grep -v -E '.*\.(svg)$' \
     | sed 's/@.*//g' \
     | awk '{ if (NF == 1){ name = $1}; if(NF == 3) {plus[name] += $1; minus[name] += $2}} END { for (name in plus) {print name": "plus[name]" "minus[name]}}' \
     | sort -k2 -gr
 }
 
-if [ $# -ne 2 ]; then
-  echo "Invalid arguments. Usage: ./cloc-author-date '<since-date>' 'author(s)'"
+if [ $# -lt 2 ]; then
+  echo "Invalid arguments. Usage: ./cloc-author-date '<since-date>' 'author(s)' '<optional-until-date>'"
   exit 1
 fi
 
@@ -20,12 +20,14 @@ fi
 
 SINCE=$1
 USERS=$2
+UNTIL=${3:-$(date)}
 REPOS=$(cat "repos.txt")
 
 rm -rf .cloc-tmp
 rm -rf reports
 mkdir reports
 
+echo "Counting lines of code between $SINCE -> $UNTIL"
 for REPO in $REPOS
 do
     echo "Pull down $REPO repo 📁"
@@ -34,7 +36,7 @@ do
     for USER in $USERS
     do
         echo "Generating report for $USER 📄"
-        git_author_stats $DIR $USER $SINCE >> ./reports/$USER.txt
+        git_author_stats $DIR $USER $SINCE $UNTIL >> ./reports/$USER.txt
     done
 done
 

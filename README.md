@@ -14,14 +14,15 @@ Oprah: +4893 -5202
 
 - Clone the repo
 - `$ cd cloc-author-date`
-- `$ ./cloc-author-date '<<SINCE>>' '<<AUTHORS>>`
-  - `<<SINCE>>` is a [unix timestamp](https://github.com/git/git/blob/master/Documentation/date-formats.txt). Examples:
+- `$ ./cloc-author-date '<<SINCE>>' '<<AUTHORS>>' '<<OPTIONAL_UNTIL>>'`
+  - `'<<SINCE>>'` is a [unix timestamp](https://github.com/git/git/blob/master/Documentation/date-formats.txt). Examples:
     - '1.year'
     - '1.month'
     - '1.day'
     - 'jan 01 1970'
-  - `<<AUTHORS>>` is a space separated list of git authors
+  - `'<<AUTHORS>>'` is a space separated list of git authors
     - git authors can be found by running `git shortlog -sne` in a git initialized repo.
+  - `'<<OPTIONAL_UNTIL>>'` is an optional param that takes in a unix timestamp. If nothing is provided, it defaults to the current date and time. Refer to the examples from `'<<SINCE>>'` for a unix time stamp.
 - Generate a `repos.txt` file at the root of the cloc-author-date directory (This file is git ignored)
   - Fill the file with SSH or HTTPS clone links separated by new lines. Example:
 
