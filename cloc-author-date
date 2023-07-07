@@ -23,6 +23,7 @@ USERS=$2
 UNTIL=${3:-$(date)}
 REPOS=$(cat "repos.txt")
 
+# Optionally comment out the line below if you are doing multiple reports with a recent git clone in .cloc-tmp
 rm -rf .cloc-tmp
 rm -rf reports
 mkdir reports
@@ -32,7 +33,8 @@ for REPO in $REPOS
 do
     echo "Pull down $REPO repo 📁"
     DIR="./.cloc-tmp/$REPO"
-    git clone "$REPO" $DIR
+    # Optionally comment out the line below if you are doing multiple reports with a recent git clone in .cloc-tmp
+    git clone "$REPO`" $DIR
     for USER in $USERS
     do
         echo "Generating report for $USER 📄"
@@ -41,10 +43,18 @@ do
 done
 
 echo "\nCloc Totals 📊"
-echo "----------------------------------------\n"
+echo "\n📒 Emails with no commits found will be excluded from results"
+echo "----------------------------------------------------------------\n"
+
+# Print line totals for each developer
 for FILE in ./reports/*.txt
 do
-    awk '{for(i=2;i<=NF;i++)$i=(a[i]+=$i)}END{print $1": +"$2" -"$3}' $FILE
+    awk '{for(i=2;i<=NF;i++)$i=(a[i]+=$i)}END{if (length($1) != 0) {print $1" +"$2" -"$3}}' $FILE >> ./reports/summary-report.txt
 done
+cat ./reports/summary-report.txt
 
+# Print team total and delta
+awk 'BEGIN{FS=" "; sumPlus=0; sumMinus=0} {sumPlus+=$2; sumMinus+=$3;} END{print "\nTeam Total: +"sumPlus " "sumMinus" \nDelta: " sumPlus + sumMinus}' ./reports/summary-report.txt
+
+# Optionally comment out the line below if you are doing multiple reports with a recent git clone in .cloc-tmpO
 rm -rf .cloc-tmp
