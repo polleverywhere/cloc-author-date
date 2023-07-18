@@ -1,5 +1,5 @@
- #!/bin/bash
- 
+#!/bin/bash
+
 git_author_stats() {
   git -C $1 log --author="$2" --since=$3  --until=$4 --numstat --pretty="%ae %H" \
     | grep -v -E '.*\.(svg)$' \
@@ -34,7 +34,7 @@ do
     echo "Pull down $REPO repo 📁"
     DIR="./.cloc-tmp/$REPO"
     # Optionally comment out the line below if you are doing multiple reports with a recent git clone in .cloc-tmp
-    git clone "$REPO`" $DIR
+    git clone "$REPO" $DIR
     for USER in $USERS
     do
         echo "Generating report for $USER 📄"
